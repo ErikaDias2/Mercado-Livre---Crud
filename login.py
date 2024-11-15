@@ -13,7 +13,7 @@ def login(db, redis_client):
         if senha_hash == usuario["senha"]:
             print(f"Bem-vindo(a), {usuario['nome']}!")
             session_id = str(usuario["_id"])
-            session_timeout = 3600
+            session_timeout = 20
             redis_client.setex(session_id, session_timeout, usuario['nome'])
             
             return session_id

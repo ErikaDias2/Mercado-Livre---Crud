@@ -11,3 +11,7 @@ def main():
             break
 
     MenuPrincipal(session_id)
+
+
+if __name__ == "__main__": 
+    main()

@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 import json
+import ast
 
 def AtualizarFavorito(db, redis_client, session_id):
     mycol_usuario = db.usuario
@@ -10,7 +11,16 @@ def AtualizarFavorito(db, redis_client, session_id):
         return
 
     favoritos_json = redis_client.get(f"favoritos:{session_id}")
-    favoritos = json.loads(favoritos_json) if favoritos_json else []
+    if favoritos_json:
+        try:
+            favoritos = ast.literal_eval(favoritos_json.decode('utf-8'))
+            favoritos = json.loads(json.dumps(favoritos))
+        except (ValueError, SyntaxError) as e:
+            print(f"Erro ao converter favoritos para JSON: {e}")
+            print("Conteúdo de favoritos_json:", favoritos_json)
+            return
+    else:
+        favoritos = []
 
     if not favoritos:
         print("Nenhum favorito encontrado.")
